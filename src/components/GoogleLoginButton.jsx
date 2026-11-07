@@ -5,12 +5,10 @@ import {
   StyleSheet,
   ActivityIndicator,
   View,
+  Platform,
 } from 'react-native';
 import Colors from '../constants/colors';
 
-/**
- * Standard Google 'G' Icon built with pure React Native primitives
- */
 const GoogleIcon = () => (
   <View style={styles.iconCircle}>
     <Text style={styles.googleLetter}>G</Text>
@@ -27,7 +25,11 @@ export const GoogleLoginButton = ({
 
   return (
     <TouchableOpacity
-      style={[styles.button, isDisabled && styles.buttonDisabled]}
+      style={[
+        styles.button,
+        isDisabled && styles.buttonDisabled,
+        Platform.OS === 'web' && { cursor: isDisabled ? 'not-allowed' : 'pointer', userSelect: 'none' },
+      ]}
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={0.85}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import Colors from '../constants/colors';
 
 export const ErrorMessage = ({ message, onDismiss }) => {
@@ -15,7 +15,10 @@ export const ErrorMessage = ({ message, onDismiss }) => {
       {onDismiss && (
         <TouchableOpacity
           onPress={onDismiss}
-          style={styles.dismissButton}
+          style={[
+            styles.dismissButton,
+            Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
+          ]}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Text style={styles.dismissText}>✕</Text>
@@ -73,4 +76,3 @@ const styles = StyleSheet.create({
 });
 
 export default ErrorMessage;
-

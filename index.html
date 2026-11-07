@@ -2,16 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>HBIntern</title>
   <style>
-    html, body, #root {
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
       width: 100%;
       height: 100%;
       margin: 0;
       padding: 0;
+      background-color: #F9E0D9;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    #root {
+      width: 100%;
+      min-height: 100%;
       display: flex;
       flex-direction: column;
+    }
+    /* Web touchable button cursor */
+    [role="button"], button {
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
     }
   </style>
 </head>

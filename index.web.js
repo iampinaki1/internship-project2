@@ -7,3 +7,4 @@ AppRegistry.registerComponent('HBIntern', () => App);
 AppRegistry.runApplication('HBIntern', {
   rootTag: document.getElementById('root'),
 });
+

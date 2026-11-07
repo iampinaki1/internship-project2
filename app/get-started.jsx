@@ -6,13 +6,14 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 import Colors from '../src/constants/colors';
 import BrandLogo from '../src/components/BrandLogo';
 
 export default function GetStartedScreen({ onGetStarted }) {
   const { width, height } = useWindowDimensions();
-  const isTablet = Math.min(width, height) >= 600;
+  const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
   const isLandscape = width > height;
 
   const features = [
@@ -46,10 +47,10 @@ export default function GetStartedScreen({ onGetStarted }) {
       bounces={false}
       showsVerticalScrollIndicator={false}
     >
-      <View style={[styles.mainWrapper, isTablet && styles.mainWrapperTablet]}>
+      <View style={[styles.mainWrapper, isTabletOrDesktop && styles.mainWrapperDesktop]}>
         <View style={styles.card}>
           {/* Brand Header */}
-          <BrandLogo size={isTablet ? 'large' : 'medium'} />
+          <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
           {/* Value Proposition */}
           <View style={styles.introBox}>
@@ -83,7 +84,10 @@ export default function GetStartedScreen({ onGetStarted }) {
 
           {/* Prominent High-Contrast Get Started Button */}
           <TouchableOpacity
-            style={styles.getStartedButton}
+            style={[
+              styles.getStartedButton,
+              Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
+            ]}
             onPress={onGetStarted}
             activeOpacity={0.88}
             accessibilityRole="button"
@@ -126,8 +130,8 @@ const styles = StyleSheet.create({
     maxWidth: 420,
     alignItems: 'center',
   },
-  mainWrapperTablet: {
-    maxWidth: 520,
+  mainWrapperDesktop: {
+    maxWidth: 460,
   },
   card: {
     width: '100%',

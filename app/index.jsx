@@ -23,8 +23,8 @@ export default function LoginScreen({ onBack }) {
   const [errorMessage, setErrorMessage] = useState('');
 
   const isLandscape = width > height;
-  const isTablet = Math.min(width, height) >= 600;
-  const cardWidth = Math.min(width * 0.92, isTablet ? 460 : 380);
+  const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
+  const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -68,7 +68,10 @@ export default function LoginScreen({ onBack }) {
           {onBack && (
             <TouchableOpacity
               onPress={onBack}
-              style={styles.backButton}
+              style={[
+                styles.backButton,
+                Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
+              ]}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text style={styles.backButtonText}>← Back</Text>
@@ -76,7 +79,7 @@ export default function LoginScreen({ onBack }) {
           )}
 
           {/* HB+ Branding */}
-          <BrandLogo size={isTablet ? 'large' : 'medium'} />
+          <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
           {/* Error Message Area */}
           <ErrorMessage
@@ -103,7 +106,10 @@ export default function LoginScreen({ onBack }) {
           {/* Error Simulation Link */}
           <TouchableOpacity
             onPress={handleSimulateError}
-            style={styles.helpLink}
+            style={[
+              styles.helpLink,
+              Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
+            ]}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Text style={styles.helpLinkText}>Need help signing in?</Text>
