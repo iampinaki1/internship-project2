@@ -49,3 +49,4 @@ export function validateEmailDomain(email) {
 }
 
 export default validateEmailDomain;
+
