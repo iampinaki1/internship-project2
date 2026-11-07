@@ -34,7 +34,7 @@ export default function ProfileScreen() {
 
         {/* Profile Card Box */}
         <View style={styles.profileBox}>
-          <Text style={styles.sectionTitle}>Intern Profile</Text>
+          <Text style={styles.sectionTitle}>Profile</Text>
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Name</Text>
@@ -46,17 +46,9 @@ export default function ProfileScreen() {
             <Text style={styles.detailValue}>{displayEmail}</Text>
           </View>
 
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Role</Text>
-            <Text style={styles.detailValue}>Software Engineer Intern</Text>
-          </View>
 
-          <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
-            <Text style={styles.detailLabel}>Status</Text>
-            <View style={styles.statusBadge}>
-              <Text style={styles.statusBadgeText}>Active</Text>
-            </View>
-          </View>
+
+
         </View>
 
         {/* High-Contrast Sign Out Button */}
@@ -136,17 +128,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.charcoal,
     fontWeight: '700',
-  },
-  statusBadge: {
-    backgroundColor: Colors.pastelLavender,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  statusBadgeText: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: Colors.charcoal,
   },
   logoutButton: {
     backgroundColor: Colors.warmCoral,

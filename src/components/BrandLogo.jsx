@@ -12,9 +12,6 @@ export const BrandLogo = ({ size = 'medium' }) => {
           HB<Text style={styles.plusSymbol}>+</Text>
         </Text>
       </View>
-      <Text style={[styles.tagline, isLarge && styles.taglineLarge]}>
-        HB+ Intern Portal
-      </Text>
       <Text style={styles.subTagline}>
         Healthcare & Benefits Workspace
       </Text>
