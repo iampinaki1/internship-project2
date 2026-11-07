@@ -58,15 +58,6 @@ const styles = StyleSheet.create({
     color: Colors.charcoal,
     fontWeight: '900',
   },
-  tagline: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: Colors.charcoal,
-    letterSpacing: -0.3,
-  },
-  taglineLarge: {
-    fontSize: 25,
-  },
   subTagline: {
     fontSize: 13,
     color: Colors.mediumGray,

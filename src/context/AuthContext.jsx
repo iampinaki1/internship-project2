@@ -1,100 +1,138 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Platform } from 'react-native';
 import { validateEmailDomain, RESTRICTED_DOMAIN_ERROR } from '../utils/domainValidation';
 import { firestoreService } from '../services/firestoreService';
 import { auth, googleAuthProvider } from '../config/firebase';
-import { signInWithPopup, signOut as fbSignOut } from 'firebase/auth';
+import {
+  signInWithPopup,
+  signOut as webSignOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from 'firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+const WEB_CLIENT_ID =
+  '1038543105258-82st52143oi1c85pbvudf6qhokq2vmd0.apps.googleusercontent.com';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [user, setUser]           = useState(null);
   const [authError, setAuthError] = useState('');
+  // initializing stays true until we know whether a session exists.
+  // On web: resolved by onAuthStateChanged.
+  // On mobile: resolved immediately (no native SDK persistence).
+  const [initializing, setInitializing] = useState(Platform.OS === 'web');
 
-  /**
-   * Google Sign-In with real Firebase Google OAuth & Domain Validation
-   * @param {string} [manualEmail] - For manual/mobile input
-   * @param {string} [manualName]
-   */
-  const loginWithGoogle = async (manualEmail, manualName) => {
-    setLoading(true);
+  // ─── Session Persistence (web only) ──────────────────────────────────────
+  useEffect(() => {
+    if (Platform.OS !== 'web') return; // mobile has no persistent session via web SDK
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const validation = validateEmailDomain(firebaseUser.email);
+        if (validation.isValid) {
+          const profile = await firestoreService.syncUserProfile({
+            uid:   firebaseUser.uid,
+            email: firebaseUser.email,
+            name:  firebaseUser.displayName || 'HB+ Intern',
+          });
+          setUser(profile);
+        } else {
+          try { await webSignOut(auth); } catch (_) {}
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setInitializing(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // ─── Google Sign-In ───────────────────────────────────────────────────────
+  const loginWithGoogle = async () => {
     setAuthError('');
 
-    try {
-      let email = manualEmail;
-      let name = manualName || 'HB+ Intern';
-      let uid = `uid_${Date.now()}`;
+    let email, name, uid;
 
-      // On Web: Trigger real Firebase Google OAuth Popup if no manual email passed
-      if (Platform.OS === 'web' && !manualEmail) {
-        try {
-          const result = await signInWithPopup(auth, googleAuthProvider);
-          if (result?.user) {
-            email = result.user.email;
-            name = result.user.displayName || name;
-            uid = result.user.uid;
-          }
-        } catch (popupErr) {
-          if (popupErr.code === 'auth/popup-closed-by-user') {
-            throw new Error('Google sign-in was closed before completing.');
-          }
-          if (popupErr.code === 'auth/unauthorized-domain') {
-            throw new Error('Authorized domain error. Add localhost/domain to Firebase Console OAuth.');
-          }
-          throw popupErr;
+    if (Platform.OS === 'web') {
+      // Web: real Firebase OAuth popup
+      try {
+        const result = await signInWithPopup(auth, googleAuthProvider);
+        email = result.user.email;
+        name  = result.user.displayName || 'HB+ Intern';
+        uid   = result.user.uid;
+      } catch (err) {
+        if (err.code === 'auth/popup-closed-by-user') {
+          throw new Error('Sign-in popup was closed. Please try again.');
         }
-      }
-
-      if (!email) {
-        throw new Error('No email provided.');
-      }
-
-      // Strict Domain Validation
-      const validation = validateEmailDomain(email);
-
-      if (!validation.isValid) {
-        // Immediately revoke session if domain unauthorized
-        if (Platform.OS === 'web') {
-          try {
-            await fbSignOut(auth);
-          } catch (_) {}
+        if (err.code === 'auth/unauthorized-domain') {
+          throw new Error(
+            'This domain is not authorised. Add it in Firebase Console → Authentication → Authorized domains.'
+          );
         }
-        const errorMsg = validation.error || RESTRICTED_DOMAIN_ERROR;
-        setAuthError(errorMsg);
-        throw new Error(errorMsg);
+        throw err;
       }
+    } else {
+      // Mobile: @react-native-google-signin picks a Google account and
+      // returns an idToken. We verify it against Firebase Auth.
+      // Requires google-services.json with correct SHA-1 fingerprint.
+      try {
+        GoogleSignin.configure({ webClientId: WEB_CLIENT_ID });
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        const signInResult = await GoogleSignin.signIn();
 
-      // Sync user profile to Firestore
-      const userProfile = await firestoreService.syncUserProfile({
-        uid,
-        email: validation.email,
-        name,
-      });
+        // SDK v13+ wraps result in { data: { idToken, user } }
+        const idToken  = signInResult?.data?.idToken  ?? signInResult?.idToken;
+        const userInfo = signInResult?.data?.user      ?? signInResult?.user;
 
-      setUser(userProfile);
-      return userProfile;
-    } finally {
-      setLoading(false);
+        if (!idToken) throw new Error('Google Sign-In failed: no ID token.');
+
+        // Use the Firebase JS Web SDK to exchange the idToken for a session.
+        // signInWithCredential works in React Native with the web SDK.
+        const credential     = GoogleAuthProvider.credential(idToken);
+        const firebaseResult = await signInWithCredential(auth, credential);
+
+        email = firebaseResult.user.email;
+        name  = firebaseResult.user.displayName || userInfo?.name || 'HB+ Intern';
+        uid   = firebaseResult.user.uid;
+      } catch (err) {
+        if (err.code === 'SIGN_IN_CANCELLED' || err.code === '-5') {
+          throw new Error('Sign-in was cancelled.');
+        }
+        throw err;
+      }
     }
+
+    // Domain validation
+    const validation = validateEmailDomain(email);
+    if (!validation.isValid) {
+      try { await webSignOut(auth); } catch (_) {}
+      const msg = validation.error || RESTRICTED_DOMAIN_ERROR;
+      setAuthError(msg);
+      throw new Error(msg);
+    }
+
+    // Sync profile
+    const userProfile = await firestoreService.syncUserProfile({
+      uid, email: validation.email, name,
+    });
+    setUser(userProfile);
+    return userProfile;
   };
 
-  /**
-   * Logout user and revoke session
-   */
+  // ─── Logout ───────────────────────────────────────────────────────────────
   const logout = async () => {
-    setLoading(true);
-    try {
-      if (Platform.OS === 'web') {
-        try {
-          await fbSignOut(auth);
-        } catch (_) {}
-      }
-      setUser(null);
-      setAuthError('');
-    } finally {
-      setLoading(false);
+    try { await webSignOut(auth); } catch (_) {}
+    if (Platform.OS !== 'web') {
+      try { await GoogleSignin.revokeAccess(); } catch (_) {}
+      try { await GoogleSignin.signOut(); }     catch (_) {}
     }
+    setUser(null);
+    setAuthError('');
   };
 
   const clearAuthError = () => setAuthError('');
@@ -103,7 +141,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        loading,
+        initializing,
         authError,
         isAuthenticated: Boolean(user),
         loginWithGoogle,
@@ -118,9 +156,7 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
 

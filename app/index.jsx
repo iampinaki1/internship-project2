@@ -13,16 +13,14 @@ import Colors from '../src/constants/colors';
 import BrandLogo from '../src/components/BrandLogo';
 import GoogleLoginButton from '../src/components/GoogleLoginButton';
 import ErrorMessage from '../src/components/ErrorMessage';
-import GoogleOAuthModal from '../src/components/GoogleOAuthModal';
 import { useAuth } from '../src/context/AuthContext';
 
 export default function LoginScreen({ navigation, onBack }) {
   const { width, height } = useWindowDimensions();
-  const { loginWithGoogle, authError, clearAuthError } = useAuth?.() || {};
+  const { loginWithGoogle, authError, clearAuthError } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showOAuthModal, setShowOAuthModal] = useState(false);
 
   const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
   const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
@@ -35,35 +33,15 @@ export default function LoginScreen({ navigation, onBack }) {
     }
   };
 
-  const handleOpenGoogleSignIn = async () => {
+  const handleSignIn = async () => {
     setErrorMessage('');
-    clearAuthError?.();
-
-    if (Platform.OS === 'web') {
-      setLoading(true);
-      try {
-        await loginWithGoogle?.();
-      } catch (err) {
-        setErrorMessage(
-          err?.message || 'Access restricted. Please login using your official domain email.'
-        );
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      setShowOAuthModal(true);
-    }
-  };
-
-  const handleSelectAccount = async (email) => {
+    clearAuthError();
     setLoading(true);
-    setErrorMessage('');
-
     try {
-      await loginWithGoogle?.(email);
-      setShowOAuthModal(false);
+      // On web  → Firebase popup OAuth
+      // On mobile → native Google account picker (no email modal needed)
+      await loginWithGoogle();
     } catch (err) {
-      setShowOAuthModal(false);
       setErrorMessage(
         err?.message || 'Access restricted. Please login using your official domain email.'
       );
@@ -103,33 +81,25 @@ export default function LoginScreen({ navigation, onBack }) {
           {/* HB+ Branding */}
           <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
-          {/* Error Message Area */}
+          {/* Error Message */}
           <ErrorMessage
             message={displayError}
             onDismiss={() => {
               setErrorMessage('');
-              clearAuthError?.();
+              clearAuthError();
             }}
           />
 
-          {/* Google Sign In Button */}
+          {/* Single Google Sign-In button — works on both web and mobile */}
           <View style={styles.actionContainer}>
             <GoogleLoginButton
-              onPress={handleOpenGoogleSignIn}
+              onPress={handleSignIn}
               loading={loading}
               title="Sign in with Google"
             />
           </View>
         </View>
       </ScrollView>
-
-      {/* Google OAuth Modal for Mobile */}
-      <GoogleOAuthModal
-        visible={showOAuthModal}
-        onClose={() => setShowOAuthModal(false)}
-        onSelectAccount={handleSelectAccount}
-        loading={loading}
-      />
     </KeyboardAvoidingView>
   );
 }

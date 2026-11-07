@@ -3,7 +3,15 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 /**
- * Live Firebase Configuration for HB+ Intern Portal (Project: hbintern)
+ * Firebase Configuration for HB+ Intern Portal (Project: hbintern)
+ *
+ * These values are safe to keep here for a web Firebase project — the API key
+ * is a public identifier, not a secret. Access is controlled by Firebase
+ * Security Rules and the OAuth authorized-domains allowlist.
+ *
+ * For the web build, Vite replaces any import.meta.env.VITE_* references at
+ * build time.  Metro (Android/iOS) does NOT support import.meta, so we keep
+ * the literal values here and rely on Firebase Security Rules for protection.
  */
 const firebaseConfig = {
   apiKey: 'AIzaSyDRVRCGahmbsaf6KPvL4Xs3kNA-TdScQ6A',

@@ -13,13 +13,16 @@ import Colors from '../src/constants/colors';
 import BrandLogo from '../src/components/BrandLogo';
 
 export default function DashboardScreen() {
-  const { user, logout } = useAuth?.() || {};
+  // useAuth is a regular function — no optional chaining needed.
+  const { user, logout } = useAuth();
   const { width, height } = useWindowDimensions();
   const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
   const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
 
   const displayName = user?.name || 'HB+ Intern';
   const displayEmail = user?.email || '';
+  const displayRole = user?.role || 'User';
+  const isAdmin = displayRole === 'Admin';
 
   return (
     <ScrollView
@@ -32,6 +35,13 @@ export default function DashboardScreen() {
         {/* HB+ Brand Logo */}
         <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
+        {/* Role Badge */}
+        <View style={[styles.roleBadge, isAdmin && styles.roleBadgeAdmin]}>
+          <Text style={[styles.roleBadgeText, isAdmin && styles.roleBadgeTextAdmin]}>
+            {isAdmin ? '⭐ Admin' : '👤 User'}
+          </Text>
+        </View>
+
         {/* Profile Card Box */}
         <View style={styles.profileBox}>
           <View style={styles.detailRow}>
@@ -39,13 +49,22 @@ export default function DashboardScreen() {
             <Text style={styles.detailValue}>{displayName}</Text>
           </View>
 
-          <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
+          <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Email</Text>
-            <Text style={styles.detailValue}>{displayEmail}</Text>
+            <Text style={styles.detailValue} numberOfLines={1} ellipsizeMode="tail">
+              {displayEmail}
+            </Text>
+          </View>
+
+          <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
+            <Text style={styles.detailLabel}>Role</Text>
+            <Text style={[styles.detailValue, isAdmin && styles.detailValueAdmin]}>
+              {displayRole}
+            </Text>
           </View>
         </View>
 
-        {/* High-Contrast Sign Out Button */}
+        {/* Sign Out */}
         <TouchableOpacity
           style={[
             styles.logoutButton,
@@ -89,6 +108,28 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.7)',
   },
+  roleBadge: {
+    backgroundColor: Colors.offWhite,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#903c2d',
+  },
+  roleBadgeAdmin: {
+    backgroundColor: '#FFF8E1',
+    borderColor: '#FFD54F',
+  },
+  roleBadgeText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: Colors.mediumGray,
+    letterSpacing: 0.3,
+  },
+  roleBadgeTextAdmin: {
+    color: '#B8860B',
+  },
   profileBox: {
     width: '100%',
     backgroundColor: Colors.offWhite,
@@ -96,7 +137,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#ECECEC',
+    borderColor: '#c82d2d',
   },
   detailRow: {
     flexDirection: 'row',
@@ -115,6 +156,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.charcoal,
     fontWeight: '700',
+    maxWidth: '60%',
+    textAlign: 'right',
+  },
+  detailValueAdmin: {
+    color: '#B8860B',
   },
   logoutButton: {
     backgroundColor: Colors.warmCoral,

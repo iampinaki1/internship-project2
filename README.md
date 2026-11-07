@@ -1,132 +1,281 @@
-# HBIntern - React Native (JavaScript / JSX)
+# HB+ Intern Portal
 
-Project bootstrapped with React Native CLI (v0.88), converted to pure JavaScript/JSX, aur physical Android device par successfully test aur run ho chuka hai.
-
----
-
-## 🎨 UI Colour Scheme
-
-| Colour | HEX Code | Usage |
-|---|---|---|
-| **Soft Peach** | `#F9E0D9` | Main background |
-| **Vibrant Coral** | `#E85D4E` | High-contrast CTA buttons, HB+ logo badge, Signout |
-| **Warm Coral (Muted)** | `#F4B5A3` | Secondary accents, borders |
-| **Light Peach** | `#F8DFD8` | Secondary backgrounds |
-| **Pastel Lavender** | `#DBDBF7` | Activity cards |
-| **Pure White** | `#FFFFFF` | Cards and containers |
-| **Off White** | `#F9F9F9` | Secondary surfaces |
-| **Charcoal** | `#1E1E1E` | Headings and crisp text |
-| **Medium Gray** | `#6E6E6E` | Secondary text, icons (enhanced contrast) |
-| **Dark Taupe** | `#4A3E3A` | Graph lines |
-
+A cross-platform authentication portal built with **React Native** (mobile) and **React Native for Web + Vite** (browser). Users log in with Google OAuth and are granted access only if their email belongs to the `@gmail.com` domain.
 
 ---
 
-## 🛠️ Kya Issues Aaye The Aur Humne Kaise Solve Kiya (Audit & Fix Summary)
+## Tech Stack
 
-### 1. TypeScript to Pure JSX Migration Issue
-- **Problem**: Default React Native CLI ne project ko TypeScript ke saath (`App.tsx` aur `__tests__/App.test.tsx`) create kar diya tha, jabki hume pure **JavaScript / JSX** use karna tha. Jab humne seedhe `.jsx` banaya, toh Jest test fail ho gaya: `SyntaxError: Cannot use import statement outside a module` kyunki React Native ka default Jest preset sirf `.js`, `.ts`, `.tsx` transform karta tha, `.jsx` nahi.
-- **Solution**:
-  - `App.tsx` ko delete karke clean `App.jsx` banaya.
-  - Test file ko `__tests__/App.test.js` me convert kiya.
-  - `jest.config.js` me transform rule update kiya taaki `.jsx` ko Babel transform kare:
-    ```javascript
-    module.exports = {
-      preset: '@react-native/jest-preset',
-      transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
-      },
-    };
-    ```
-  - `npm test` run kiya aur tests 100% pass ho gaye.
+| Layer | Technology |
+|---|---|
+| Mobile (Android/iOS) | React Native 0.88 |
+| Web (browser) | React Native for Web + Vite 8 |
+| Auth — Web | Firebase JS Web SDK (`firebase`) |
+| Auth — Mobile | `@react-native-firebase/auth` + `@react-native-google-signin/google-signin` |
+| Database — Web | Firebase JS SDK (`firebase/firestore`) |
+| Database — Mobile | `@react-native-firebase/firestore` |
+| Navigation | React Navigation v7 (native-stack) |
+| State | React Context API |
 
 ---
 
-### 2. Missing Android SDK Build-Tools & CMake (New Architecture)
-- **Problem**: React Native 0.88 by default New Architecture (Fabric + TurboModules) use karta hai jisme native C++ code compile hota hai. Iske liye `Android SDK Build-Tools 37.0.0` aur `CMake 3.22.1` required the jo machine par pehle install nahi the.
-- **Solution**:
-  - `android/local.properties` me SDK path verify kiya:
-    ```properties
-    sdk.dir=C:/Users/Outpi/AppData/Local/Android/Sdk
-    ```
-  - `ANDROID_HOME` aur `ANDROID_SDK_ROOT` environment variables verify aur persist kiye.
-  - Gradle build ke dauran Android SDK ne required Build-Tools 37 aur CMake 3.22.1 auto-accept license ke saath install kar liye aur native libraries compile kar li.
+## Project Structure
 
----
-
-### 3. Port 8081 & Metro Packager Prompt Issue
-- **Problem**: Port 8081 pehle se free kiya gaya tha aur uspar Metro bundler process chal raha tha. Lekin jab normal `npx react-native run-android` run karte the, toh wo firse naya packager start karne ki koshish karta tha aur interactive prompt aata tha: *`Another process is running on port 8081. Use port 8082 instead?`*
-- **Solution**:
-  - Naya port choose karne ya process kill karne ki zaroorat nahi thi.
-  - `--no-packager` flag use kiya:
-    ```powershell
-    npx react-native run-android --no-packager
-    ```
-  - Isse build ne existing port 8081 wale Metro process ko seamlessly reuse kiya bina kisi conflict ke.
-
----
-
-### 4. Physical Android Phone Connectivity & Fast Refresh
-- **Problem**: Phone USB se connected tha aur authorize ho chuka tha, lekin phone ke andar se app ko `localhost:8081` (Metro bundler) ka connection nahi mil pata.
-- **Solution**:
-  - Reverse port forwarding command execute ki:
-    ```powershell
-    adb reverse tcp:8081 tcp:8081
-    ```
-  - Isse phone ka port 8081 direct PC ke Metro port 8081 se link ho gaya.
-  - APK phone par install ho gayi (`BUILD SUCCESSFUL in 6m 2s`).
-  - App open hone par bundle download hua (`Running "HBIntern" with {"fabric":true}`).
-  - Fast Refresh test kiya aur code change turant phone screen par live reflect hua.
-
----
-
-## 🚀 How to Run the Project (Daily Workflow)
-
-### 1. Metro Bundler Start Karein:
-```powershell
-npm start
+```
+HBIntern/
+├── app/                          # Screens (both platforms)
+│   ├── _layout.jsx               # Root layout — providers + navigator
+│   ├── get-started.jsx           # Landing screen
+│   ├── index.jsx                 # Login screen
+│   └── dashboard.jsx             # Protected dashboard
+├── src/
+│   ├── components/
+│   │   ├── BrandLogo.jsx
+│   │   ├── ErrorMessage.jsx
+│   │   └── GoogleLoginButton.jsx
+│   ├── config/
+│   │   ├── appConfig.js          # ALLOWED_EMAIL_DOMAIN + client IDs
+│   │   └── firebase.js           # Firebase JS Web SDK init (web only)
+│   ├── constants/colors.js
+│   ├── context/AuthContext.jsx   # Auth state — platform-split SDK usage
+│   ├── mocks/                    # Web stubs for native-only packages
+│   │   ├── codegenNativeComponent.js
+│   │   ├── googleSignin.js
+│   │   ├── rnFirebaseAuth.js
+│   │   └── rnFirebaseFirestore.js
+│   ├── services/firestoreService.js  # Firestore — platform-split
+│   └── utils/
+│       ├── validateDomain.js
+│       └── domainValidation.js
+├── android/
+│   └── app/
+│       └── google-services.json  # Required for native Firebase on Android
+├── index.js                      # Native entry point
+├── index.web.js                  # Web entry point
+├── index.html                    # HTML shell for Vite
+├── vite.config.mjs               # Web build + native package stubs
+├── babel.config.js
+├── .env                          # Environment variables (not committed)
+└── .env.example                  # Template
 ```
 
-### 2. USB Reverse Set Karein (Physical Device):
-```powershell
-adb reverse tcp:8081 tcp:8081
+---
+
+## Setup Instructions
+
+### Prerequisites
+
+- Node.js ≥ 22.11.0
+- JDK 17 + Android Studio (for Android)
+- A Firebase project with Google Auth enabled
+
+### 1. Clone & Install
+
+```bash
+git clone <repo-url>
+cd HBIntern
+npm install
 ```
 
-### 3. App Run Karein (Second Terminal):
-```powershell
-npx react-native run-android --no-packager
+### 2. Environment Variables
+
+```bash
+cp .env.example .env
 ```
 
-### 4. Tests Run Karein:
-```powershell
-npm test
+Fill in your Firebase project values. All keys must have the `VITE_` prefix for the web build.
+
+---
+
+## Firebase Setup (Critical for Mobile)
+
+### Step 1 — Enable Google Sign-In in Firebase Console
+
+1. Go to [Firebase Console](https://console.firebase.google.com/) → your project.
+2. **Authentication → Sign-in method** → enable **Google**.
+3. **Authentication → Settings → Authorized domains** → add `localhost` and your production domain.
+
+### Step 2 — Get your SHA-1 fingerprint (Android)
+
+Run this in the project root:
+
+```bash
+cd android && ./gradlew signingReport
 ```
 
-### 5. Web App Run Karein (React Native for Web + Vite):
-```powershell
+Copy the `SHA1` value from the `debug` variant output.
+
+### Step 3 — Add SHA-1 to Firebase Console
+
+1. Firebase Console → Project Settings → Your apps → Android app.
+2. Add the SHA-1 fingerprint.
+3. Download the updated `google-services.json`.
+4. Replace `android/app/google-services.json` with the downloaded file.
+
+> **Without the correct SHA-1 in google-services.json, Google Sign-In will fail on Android with a `DEVELOPER_ERROR`.**
+
+### Step 4 — Firestore Security Rules
+
+In Firebase Console → Firestore → Rules:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null
+        && request.auth.token.email.matches(".*@gmail\\.com$");
+    }
+  }
+}
+```
+
+---
+
+## Running the App
+
+### Web
+
+```bash
 npm run web
+# Opens at http://localhost:5173
 ```
-Browser me `http://localhost:5173` par app open ho jayegi.
+
+### Android
+
+```bash
+# Terminal 1 — Metro bundler
+npm start -- --reset-cache
+
+# Terminal 2 — install + launch on emulator/device
+npm run android
+```
 
 ---
 
-## 🔐 Authentication, Domain Validation & Firestore Integration
+## Authentication Flow
 
-### 1. Domain Validation Flow
-- **Allowed Official Domain**: `@hbplus.fit`
-  - Example: `example@hbplus.fit` → Login allowed, user profile synced to Firestore, access granted to Protected Dashboard.
-- **Restricted Domains**: `@gmail.com` or any non-official domain
-  - Example: `example@gmail.com` → Access blocked, exact error displayed:
-    > *"Access restricted. Please login using your official domain email."*
+```
+User taps "Sign in with Google"
+           │
+           ├── Web ──► Firebase signInWithPopup (real Google OAuth popup)
+           │                      │
+           │           Google returns user object with email + uid
+           │
+           └── Mobile ──► GoogleSignin.signIn() (native account picker)
+                                    │
+                          Returns idToken from Google
+                                    │
+                          RNFirebaseAuth().signInWithCredential(idToken)
+                                    │
+                          Firebase verifies token, returns user
 
-### 2. React Navigation & Protected Routes
-- Built using `@react-navigation/native` & `@react-navigation/native-stack`.
-- **Public Routes**: `GetStarted` → `Login`
-- **Protected Routes**: `Dashboard` (Only mounted and accessible when `isAuthenticated === true`).
-- On **Sign Out**, session is immediately revoked and navigation switches back to public auth flow.
+                   email extracted from Firebase user
+                                │
+               ┌────────────────▼─────────────────┐
+               │        Domain Validation          │
+               │  email.split('@')[1] === 'gmail.com' │
+               └────────────────┬─────────────────┘
+                                │
+               ┌────────────────┴──────────────────┐
+            ✅ PASS                             ❌ FAIL
+               │                                   │
+     syncUserProfile()                    signOut() (revoke session)
+     → Firestore upsert                   Show error:
+     → Assign role (Admin / User)         "Access restricted. Please login
+     → setUser(profile)                    using your official domain email."
+     → Navigate to Dashboard
+```
 
-### 3. Firebase & Firestore Integration
-- **Firebase Config**: Modular SDK v11 initialized at `src/config/firebase.js`.
-- **Firestore Service**: User documents synced to Firestore collection `users` with document ID matching lowercase email.
-- **Cross-Platform Compatibility**: Tested and verified on both **Android** (React Native CLI) and **Web** (Vite + React Native Web).
+### Domain Restriction — How It Works
 
+After Google sign-in, the email is extracted from the Firebase user object and checked:
+
+```js
+// src/utils/validateDomain.js
+const parts = email.trim().toLowerCase().split('@');
+return parts[1] === 'gmail.com';  // exact domain match
+```
+
+`endsWith` is intentionally **not used** — `user@fakegmail.com` ends with `gmail.com` but is not the same domain. The split-and-compare approach is exact.
+
+If the check fails:
+1. The Firebase session is immediately revoked (`signOut`)
+2. An error is shown: *"Access restricted. Please login using your official domain email."*
+3. The user stays on the login screen
+
+---
+
+## Role-Based Access
+
+Roles are assigned during Firestore profile sync:
+
+| Email prefix | Role |
+|---|---|
+| `admin@...` or `lead@...` | `Admin` |
+| Everything else | `User` |
+
+The role is stored in the `users/{email}` Firestore document and displayed as a badge on the Dashboard.
+
+> For production, roles should be managed via [Firebase Custom Claims](https://firebase.google.com/docs/auth/admin/custom-claims) using the Admin SDK — client-side role assignment can be spoofed.
+
+---
+
+## Protected Routes
+
+Route protection uses React Navigation's **conditional screen registration**:
+
+```jsx
+{isAuthenticated ? (
+  <Stack.Screen name="Dashboard" component={DashboardScreen} />
+) : (
+  <>
+    <Stack.Screen name="GetStarted" />
+    <Stack.Screen name="Login" />
+  </>
+)}
+```
+
+When `isAuthenticated` is `false`, the Dashboard screen does not exist in the navigator. Typing its URL or navigating directly is impossible — there is no route to land on.
+
+### Session Persistence
+
+- **Web**: Firebase JS SDK persists the session in IndexedDB. `onAuthStateChanged` restores it on page reload — no re-login needed.
+- **Mobile**: `@react-native-firebase` persists the session natively. `onAuthStateChanged` restores it on app restart.
+
+The app shows a loading spinner on startup until the session check resolves, so users never see a login-screen flash if they are already authenticated.
+
+---
+
+## Platform Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│                   Shared Code                       │
+│  app/screens, src/context, src/utils, src/services  │
+│           Platform.OS checks at runtime             │
+└──────────────┬──────────────────────┬───────────────┘
+               │                      │
+      Platform.OS = 'web'    Platform.OS = 'android'|'ios'
+               │                      │
+   Firebase JS Web SDK      @react-native-firebase
+   (signInWithPopup)        (native Google Sign-In picker
+   firebase/firestore        + signInWithCredential)
+   Vite bundles stubs        @react-native-firebase/firestore
+   for native packages       Metro bundles web SDK stubs
+```
+
+Web builds use Vite aliases to replace native packages with empty stubs. Mobile builds use Metro's module resolution which finds the real native packages.
+
+---
+
+## Scripts
+
+| Command | Description |
+|---|---|
+| `npm run web` | Start Vite dev server (http://localhost:5173) |
+| `npm start -- --reset-cache` | Start Metro (always reset cache after changes) |
+| `npm run android` | Build and run on Android |
+| `npm run ios` | Build and run on iOS |
+| `npm run lint` | ESLint |
+| `npm test` | Jest |

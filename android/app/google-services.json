@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1038543105258",
+    "project_id": "hbintern",
+    "storage_bucket": "hbintern.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038543105258:android:placeholder",
+        "android_client_info": {
+          "package_name": "com.hbintern"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038543105258-ap7u58ti80dvlmjrhbd5ikd30f3op4p5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hbintern",
+            "certificate_hash": "REPLACE_WITH_YOUR_SHA1"
+          }
+        },
+        {
+          "client_id": "1038543105258-82st52143oi1c85pbvudf6qhokq2vmd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRVRCGahmbsaf6KPvL4Xs3kNA-TdScQ6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038543105258-82st52143oi1c85pbvudf6qhokq2vmd0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

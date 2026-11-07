@@ -7,8 +7,9 @@ module.exports = {
     'node_modules/(?!(@react-native|react-native|@react-navigation|react-native-screens)/)',
   ],
   moduleNameMapper: {
-    '^firebase/app$': '<rootDir>/src/mocks/firebaseMock.js',
-    '^firebase/auth$': '<rootDir>/src/mocks/firebaseMock.js',
-    '^firebase/firestore$': '<rootDir>/src/mocks/firebaseMock.js',
+    '^@react-native-google-signin/google-signin$': '<rootDir>/src/shims/googleSignin.js',
+    '^firebase/app$': '<rootDir>/__mocks__/firebaseMock.js',
+    '^firebase/auth$': '<rootDir>/__mocks__/firebaseMock.js',
+    '^firebase/firestore$': '<rootDir>/__mocks__/firebaseMock.js',
   },
 };

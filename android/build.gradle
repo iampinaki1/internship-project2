@@ -5,7 +5,7 @@ buildscript {
         compileSdkVersion = 37
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.2.0"
+        kotlinVersion = "2.4.0"
     }
     repositories {
         google()
@@ -14,7 +14,26 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        // Pin the Kotlin gradle plugin explicitly to 2.4.0 so every submodule
+        // (react-native-firebase, safe-area-context, etc.) compiles with the
+        // same Kotlin version that their stdlib requires.
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
+        // Required for @react-native-firebase — processes google-services.json
+        classpath("com.google.gms:google-services:4.4.2")
+    }
+}
+
+// Force Kotlin stdlib 2.4.0 across ALL submodule dependency graphs.
+// Without this, individual modules can pull in older stdlib versions
+// and cause the "compiled with incompatible version" errors.
+allprojects {
+    configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == "org.jetbrains.kotlin") {
+                details.useVersion("2.4.0")
+                details.because("Force consistent Kotlin version across all modules")
+            }
+        }
     }
 }
 
