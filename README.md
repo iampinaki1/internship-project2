@@ -102,3 +102,9 @@ npx react-native run-android --no-packager
 npm test
 ```
 
+### 5. Web App Run Karein (React Native for Web + Vite):
+```powershell
+npm run web
+```
+Browser me `http://localhost:5173` par app open ho jayegi.
+
