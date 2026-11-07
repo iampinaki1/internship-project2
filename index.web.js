@@ -4,7 +4,10 @@ import App from './App';
 
 AppRegistry.registerComponent('HBIntern', () => App);
 
-AppRegistry.runApplication('HBIntern', {
-  rootTag: document.getElementById('root'),
-});
+const rootTag = document.getElementById('root');
+if (rootTag) {
+  AppRegistry.runApplication('HBIntern', {
+    rootTag,
+  });
+}
 
