@@ -20,8 +20,6 @@ export default function DashboardScreen() {
 
   const displayName = user?.name || 'HB+ Intern';
   const displayEmail = user?.email || 'example@hbplus.fit';
-  const displayDomain = user?.domain || 'hbplus.fit';
-  const storageStatus = user?.storageType || 'Firestore (Cloud)';
 
   return (
     <ScrollView
@@ -34,49 +32,16 @@ export default function DashboardScreen() {
         {/* HB+ Brand Logo */}
         <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
-        {/* Protected Dashboard Header */}
-        <View style={styles.protectedHeaderBadge}>
-          <Text style={styles.protectedHeaderText}>🔒 Protected Route • Authorized</Text>
-        </View>
-
         {/* Profile Card Box */}
         <View style={styles.profileBox}>
-          <Text style={styles.sectionTitle}>Intern Profile</Text>
-
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Name</Text>
             <Text style={styles.detailValue}>{displayName}</Text>
           </View>
 
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Official Email</Text>
-            <Text style={styles.detailValue}>{displayEmail}</Text>
-          </View>
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Domain</Text>
-            <View style={styles.domainBadge}>
-              <Text style={styles.domainBadgeText}>@{displayDomain}</Text>
-            </View>
-          </View>
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Role</Text>
-            <Text style={styles.detailValue}>Software Engineer Intern</Text>
-          </View>
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Account Status</Text>
-            <View style={styles.statusBadge}>
-              <Text style={styles.statusBadgeText}>Active</Text>
-            </View>
-          </View>
-
           <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
-            <Text style={styles.detailLabel}>Database</Text>
-            <View style={styles.firestoreBadge}>
-              <Text style={styles.firestoreBadgeText}>✓ {storageStatus}</Text>
-            </View>
+            <Text style={styles.detailLabel}>Email</Text>
+            <Text style={styles.detailValue}>{displayEmail}</Text>
           </View>
         </View>
 
@@ -124,20 +89,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.7)',
   },
-  protectedHeaderBadge: {
-    backgroundColor: '#E8F5E9',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#C8E6C9',
-  },
-  protectedHeaderText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#2E7D32',
-  },
   profileBox: {
     width: '100%',
     backgroundColor: Colors.offWhite,
@@ -147,63 +98,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ECECEC',
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: Colors.charcoal,
-    marginBottom: 14,
-    textAlign: 'center',
-  },
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#ECECEC',
   },
   detailLabel: {
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.mediumGray,
     fontWeight: '600',
   },
   detailValue: {
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.charcoal,
     fontWeight: '700',
-  },
-  domainBadge: {
-    backgroundColor: Colors.pastelLavender,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  domainBadgeText: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: Colors.charcoal,
-  },
-  statusBadge: {
-    backgroundColor: '#E8F5E9',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  statusBadgeText: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#2E7D32',
-  },
-  firestoreBadge: {
-    backgroundColor: '#FFF3E0',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  firestoreBadgeText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#E65100',
   },
   logoutButton: {
     backgroundColor: Colors.warmCoral,

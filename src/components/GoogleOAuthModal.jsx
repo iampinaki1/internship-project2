@@ -26,7 +26,7 @@ export default function GoogleOAuthModal({
 
   const handleCustomSubmit = () => {
     if (customEmail.trim()) {
-      onSelectAccount(customEmail.trim(), 'Custom User');
+      onSelectAccount(customEmail.trim(), 'HB+ Intern');
     }
   };
 
@@ -51,14 +51,14 @@ export default function GoogleOAuthModal({
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={Colors.warmCoral} />
-              <Text style={styles.loadingText}>Validating organizational domain...</Text>
+              <Text style={styles.loadingText}>Signing in...</Text>
             </View>
           ) : (
             <View style={styles.content}>
-              {/* Account 1: Authorized Official Domain */}
+              {/* Account 1: example@hbplus.fit */}
               <TouchableOpacity
                 style={styles.accountOption}
-                onPress={() => handleSelect('example@hbplus.fit', 'HB+ Official Intern')}
+                onPress={() => handleSelect('example@hbplus.fit', 'HB+ Intern')}
                 activeOpacity={0.7}
                 accessibilityRole="button"
                 accessibilityLabel="Sign in with example@hbplus.fit"
@@ -67,16 +67,15 @@ export default function GoogleOAuthModal({
                   <Text style={styles.avatarText}>HB</Text>
                 </View>
                 <View style={styles.accountInfo}>
-                  <Text style={styles.accountName}>HB+ Official Intern</Text>
+                  <Text style={styles.accountName}>HB+ Intern</Text>
                   <Text style={styles.accountEmail}>example@hbplus.fit</Text>
-                  <Text style={styles.authorizedTag}>✓ Official Domain (@hbplus.fit)</Text>
                 </View>
               </TouchableOpacity>
 
-              {/* Account 2: Restricted Personal Domain */}
+              {/* Account 2: example@gmail.com */}
               <TouchableOpacity
                 style={styles.accountOption}
-                onPress={() => handleSelect('example@gmail.com', 'Personal Gmail Account')}
+                onPress={() => handleSelect('example@gmail.com', 'Personal Account')}
                 activeOpacity={0.7}
                 accessibilityRole="button"
                 accessibilityLabel="Sign in with example@gmail.com"
@@ -87,7 +86,6 @@ export default function GoogleOAuthModal({
                 <View style={styles.accountInfo}>
                   <Text style={styles.accountName}>Personal Account</Text>
                   <Text style={styles.accountEmail}>example@gmail.com</Text>
-                  <Text style={styles.restrictedTag}>✕ Restricted Domain (@gmail.com)</Text>
                 </View>
               </TouchableOpacity>
 
@@ -96,7 +94,7 @@ export default function GoogleOAuthModal({
                 <View style={styles.customInputContainer}>
                   <TextInput
                     style={styles.input}
-                    placeholder="Enter email (e.g. name@hbplus.fit)"
+                    placeholder="Enter email address"
                     placeholderTextColor={Colors.mediumGray}
                     value={customEmail}
                     onChangeText={setCustomEmail}
@@ -118,7 +116,7 @@ export default function GoogleOAuthModal({
                   onPress={() => setShowCustomInput(true)}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.useAnotherText}>+ Use another email account</Text>
+                  <Text style={styles.useAnotherText}>+ Use another account</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -234,18 +232,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.mediumGray,
     marginTop: 1,
-  },
-  authorizedTag: {
-    fontSize: 11,
-    color: '#2E7D32',
-    fontWeight: '700',
-    marginTop: 2,
-  },
-  restrictedTag: {
-    fontSize: 11,
-    color: '#D32F2F',
-    fontWeight: '700',
-    marginTop: 2,
   },
   customInputContainer: {
     marginTop: 6,
