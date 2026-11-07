@@ -1,14 +1,13 @@
-/**
- * Domain validation utilities for HB+ Authentication
- * Restricts access strictly to authorized official domain (@hbplus.fit)
- */
+import { validateDomain } from './validateDomain';
+import { APP_CONFIG } from '../config/appConfig';
 
-export const ALLOWED_DOMAIN = 'hbplus.fit';
+export const ALLOWED_DOMAIN = APP_CONFIG.ALLOWED_EMAIL_DOMAIN.replace('@', '');
 export const RESTRICTED_DOMAIN_ERROR =
   'Access restricted. Please login using your official domain email.';
 
 /**
  * Validates whether an email belongs to the allowed organizational domain.
+ * Uses validateDomain() based on APP_CONFIG.ALLOWED_EMAIL_DOMAIN
  * @param {string} email
  * @returns {{ isValid: boolean, error?: string, email?: string, domain?: string }}
  */
@@ -20,33 +19,21 @@ export function validateEmailDomain(email) {
     };
   }
 
-  const normalized = email.trim().toLowerCase();
-  const atIndex = normalized.lastIndexOf('@');
+  const isValid = validateDomain(email);
 
-  if (atIndex === -1 || atIndex === 0 || atIndex === normalized.length - 1) {
-    return {
-      isValid: false,
-      error: 'Invalid email format.',
-    };
-  }
-
-  const domain = normalized.slice(atIndex + 1);
-
-  if (domain !== ALLOWED_DOMAIN) {
+  if (!isValid) {
     return {
       isValid: false,
       error: RESTRICTED_DOMAIN_ERROR,
-      domain,
-      email: normalized,
     };
   }
 
   return {
     isValid: true,
-    email: normalized,
-    domain,
+    email: email.trim().toLowerCase(),
+    domain: ALLOWED_DOMAIN,
   };
 }
 
+export { validateDomain, APP_CONFIG };
 export default validateEmailDomain;
-
