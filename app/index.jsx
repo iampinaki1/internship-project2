@@ -22,7 +22,6 @@ export default function LoginScreen({ onBack }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const isLandscape = width > height;
   const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
   const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
 
@@ -31,7 +30,7 @@ export default function LoginScreen({ onBack }) {
     setErrorMessage('');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       login?.({
         email: 'intern@hbplus.com',
         name: 'HB+ Intern',
@@ -39,15 +38,11 @@ export default function LoginScreen({ onBack }) {
       });
     } catch (err) {
       setErrorMessage(
-        err?.message || 'Unable to sign in with Google. Please check your network and try again.'
+        err?.message || 'Unable to sign in. Please try again.'
       );
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSimulateError = () => {
-    setErrorMessage('Domain verification failed. Only @hbplus.com accounts are permitted.');
   };
 
   return (
@@ -56,10 +51,7 @@ export default function LoginScreen({ onBack }) {
       style={styles.keyboardView}
     >
       <ScrollView
-        contentContainerStyle={[
-          styles.scrollContainer,
-          isLandscape && styles.scrollContainerLandscape,
-        ]}
+        contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
         bounces={false}
         showsVerticalScrollIndicator={false}
@@ -87,7 +79,7 @@ export default function LoginScreen({ onBack }) {
             onDismiss={() => setErrorMessage('')}
           />
 
-          {/* Action Area */}
+          {/* Google Sign In Button */}
           <View style={styles.actionContainer}>
             <GoogleLoginButton
               onPress={handleGoogleLogin}
@@ -95,31 +87,7 @@ export default function LoginScreen({ onBack }) {
               title="Sign in with Google"
             />
           </View>
-
-          {/* Organizational Help & Domain Policy */}
-          <View style={styles.infoBox}>
-            <Text style={styles.infoText}>
-              Please sign in using your official organizational email.
-            </Text>
-          </View>
-
-          {/* Error Simulation Link */}
-          <TouchableOpacity
-            onPress={handleSimulateError}
-            style={[
-              styles.helpLink,
-              Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
-            ]}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          >
-            <Text style={styles.helpLinkText}>Need help signing in?</Text>
-          </TouchableOpacity>
         </View>
-
-        {/* Footer */}
-        <Text style={styles.footerText}>
-          © {new Date().getFullYear()} HB+ Platform • All rights reserved
-        </Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -134,17 +102,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 24,
     paddingHorizontal: 16,
-  },
-  scrollContainerLandscape: {
-    paddingVertical: 12,
   },
   card: {
     backgroundColor: Colors.pureWhite,
     borderRadius: 22,
-    paddingVertical: 26,
-    paddingHorizontal: 22,
+    paddingVertical: 32,
+    paddingHorizontal: 24,
     alignItems: 'center',
     elevation: 4,
     shadowColor: Colors.charcoal,
@@ -156,7 +121,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: 'flex-start',
-    marginBottom: 6,
+    marginBottom: 10,
     paddingVertical: 4,
     paddingHorizontal: 4,
   },
@@ -167,34 +132,6 @@ const styles = StyleSheet.create({
   },
   actionContainer: {
     width: '100%',
-    marginTop: 4,
-  },
-  infoBox: {
-    marginTop: 18,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-    width: '100%',
-  },
-  infoText: {
-    fontSize: 12,
-    color: Colors.mediumGray,
-    textAlign: 'center',
-    lineHeight: 16,
-  },
-  helpLink: {
-    marginTop: 10,
-  },
-  helpLinkText: {
-    fontSize: 12,
-    color: Colors.darkTaupe,
-    fontWeight: '600',
-    textDecorationLine: 'underline',
-  },
-  footerText: {
-    marginTop: 14,
-    fontSize: 11,
-    color: Colors.mediumGray,
-    textAlign: 'center',
+    marginTop: 8,
   },
 });
