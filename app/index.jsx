@@ -22,20 +22,16 @@ export default function LoginScreen({ onBack }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Responsive calculations
   const isLandscape = width > height;
   const isTablet = Math.min(width, height) >= 600;
-  const cardWidth = Math.min(width * 0.9, isTablet ? 480 : 380);
+  const cardWidth = Math.min(width * 0.92, isTablet ? 460 : 380);
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     setErrorMessage('');
 
     try {
-      // Simulate OAuth flow (can be hooked to real Firebase / Google OAuth)
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-
-      // Success payload
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       login?.({
         email: 'intern@hbplus.com',
         name: 'HB+ Intern',
@@ -65,10 +61,10 @@ export default function LoginScreen({ onBack }) {
           isLandscape && styles.scrollContainerLandscape,
         ]}
         keyboardShouldPersistTaps="handled"
+        bounces={false}
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.card, { width: cardWidth }]}>
-          {/* Back button if available */}
           {onBack && (
             <TouchableOpacity
               onPress={onBack}
@@ -100,11 +96,11 @@ export default function LoginScreen({ onBack }) {
           {/* Organizational Help & Domain Policy */}
           <View style={styles.infoBox}>
             <Text style={styles.infoText}>
-              Please use your institutional or organization email to access your workspace.
+              Please sign in using your official organizational email.
             </Text>
           </View>
 
-          {/* Error Simulation Link (For Review / Testing) */}
+          {/* Error Simulation Link */}
           <TouchableOpacity
             onPress={handleSimulateError}
             style={styles.helpLink}
@@ -115,11 +111,9 @@ export default function LoginScreen({ onBack }) {
         </View>
 
         {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            © {new Date().getFullYear()} HB+ Platform • All rights reserved
-          </Text>
-        </View>
+        <Text style={styles.footerText}>
+          © {new Date().getFullYear()} HB+ Platform • All rights reserved
+        </Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -134,36 +128,35 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 32,
+    paddingVertical: 20,
     paddingHorizontal: 16,
   },
   scrollContainerLandscape: {
-    paddingVertical: 20,
+    paddingVertical: 12,
   },
   card: {
     backgroundColor: Colors.pureWhite,
-    borderRadius: 24,
-    paddingVertical: 32,
-    paddingHorizontal: 28,
+    borderRadius: 22,
+    paddingVertical: 26,
+    paddingHorizontal: 22,
     alignItems: 'center',
     elevation: 4,
     shadowColor: Colors.charcoal,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
-    shadowRadius: 12,
+    shadowRadius: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.6)',
-    position: 'relative',
+    borderColor: 'rgba(255, 255, 255, 0.7)',
   },
   backButton: {
     alignSelf: 'flex-start',
-    marginBottom: 8,
+    marginBottom: 6,
     paddingVertical: 4,
-    paddingHorizontal: 6,
+    paddingHorizontal: 4,
   },
   backButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.charcoal,
   },
   actionContainer: {
@@ -171,8 +164,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   infoBox: {
-    marginTop: 24,
-    paddingTop: 16,
+    marginTop: 18,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: '#F0F0F0',
     width: '100%',
@@ -181,23 +174,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.mediumGray,
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: 16,
   },
   helpLink: {
-    marginTop: 14,
+    marginTop: 10,
   },
   helpLinkText: {
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.darkTaupe,
     fontWeight: '600',
     textDecorationLine: 'underline',
   },
-  footer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
   footerText: {
-    fontSize: 12,
+    marginTop: 14,
+    fontSize: 11,
     color: Colors.mediumGray,
+    textAlign: 'center',
   },
 });

@@ -9,14 +9,16 @@ Project bootstrapped with React Native CLI (v0.88), converted to pure JavaScript
 | Colour | HEX Code | Usage |
 |---|---|---|
 | **Soft Peach** | `#F9E0D9` | Main background |
-| **Warm Coral** | `#F4B5A3` | Primary accent, charts |
+| **Vibrant Coral** | `#E85D4E` | High-contrast CTA buttons, HB+ logo badge, Signout |
+| **Warm Coral (Muted)** | `#F4B5A3` | Secondary accents, borders |
 | **Light Peach** | `#F8DFD8` | Secondary backgrounds |
 | **Pastel Lavender** | `#DBDBF7` | Activity cards |
 | **Pure White** | `#FFFFFF` | Cards and containers |
 | **Off White** | `#F9F9F9` | Secondary surfaces |
-| **Charcoal** | `#252525` | Headings and text |
-| **Medium Gray** | `#A7A7A7` | Secondary text, icons |
-| **Dark Taupe** | `#5E514D` | Graph lines |
+| **Charcoal** | `#1E1E1E` | Headings and crisp text |
+| **Medium Gray** | `#6E6E6E` | Secondary text, icons (enhanced contrast) |
+| **Dark Taupe** | `#4A3E3A` | Graph lines |
+
 
 ---
 

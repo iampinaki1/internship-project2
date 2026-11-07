@@ -14,25 +14,24 @@ export default function GetStartedScreen({ onGetStarted }) {
   const { width, height } = useWindowDimensions();
   const isTablet = Math.min(width, height) >= 600;
   const isLandscape = width > height;
-  const containerWidth = Math.min(width * 0.92, isTablet ? 520 : 400);
 
   const features = [
     {
-      title: 'Seamless Onboarding',
-      desc: 'Access your tasks, resources, and internship roadmap in one unified workspace.',
+      title: 'Unified Onboarding',
+      desc: 'Roadmaps, assigned tasks, and intern resources.',
       bgColor: Colors.pastelLavender,
       tag: '01',
     },
     {
-      title: 'Track Performance & Goals',
-      desc: 'Real-time milestones, feedback loops, and progress monitoring.',
+      title: 'Track Performance',
+      desc: 'Milestones, project feedback, and progress analytics.',
       bgColor: Colors.lightPeach,
       tag: '02',
     },
     {
-      title: 'Institutional Single Sign-On',
-      desc: 'Sign in effortlessly using your authenticated organization Google account.',
-      bgColor: Colors.pureWhite,
+      title: 'Secure Google SSO',
+      desc: 'Instant access with your verified organizational email.',
+      bgColor: Colors.offWhite,
       tag: '03',
     },
   ];
@@ -44,59 +43,61 @@ export default function GetStartedScreen({ onGetStarted }) {
         styles.scrollContent,
         isLandscape && styles.scrollContentLandscape,
       ]}
+      bounces={false}
       showsVerticalScrollIndicator={false}
     >
-      <View style={[styles.card, { width: containerWidth }]}>
-        {/* Brand Header */}
-        <BrandLogo size={isTablet ? 'large' : 'medium'} />
+      <View style={[styles.mainWrapper, isTablet && styles.mainWrapperTablet]}>
+        <View style={styles.card}>
+          {/* Brand Header */}
+          <BrandLogo size={isTablet ? 'large' : 'medium'} />
 
-        {/* Welcome Tagline */}
-        <View style={styles.introBox}>
-          <Text style={styles.headline}>
-            Empowering Your Internship Journey
-          </Text>
-          <Text style={styles.subheadline}>
-            The official digital hub for interns at HB+. Everything you need to succeed, all in one place.
-          </Text>
-        </View>
+          {/* Value Proposition */}
+          <View style={styles.introBox}>
+            <Text style={styles.headline}>
+              Empowering Your Internship
+            </Text>
+            <Text style={styles.subheadline}>
+              Your centralized workspace for daily tracking, mentorship, and deliverables at HB+.
+            </Text>
+          </View>
 
-        {/* Feature Highlights */}
-        <View style={styles.featuresList}>
-          {features.map((item, index) => (
-            <View
-              key={index}
-              style={[styles.featureCard, { backgroundColor: item.bgColor }]}
-            >
-              <View style={styles.featureHeader}>
-                <View style={styles.featureTag}>
-                  <Text style={styles.featureTagText}>{item.tag}</Text>
+          {/* Feature Badges */}
+          <View style={styles.featuresList}>
+            {features.map((item, index) => (
+              <View
+                key={index}
+                style={[styles.featureCard, { backgroundColor: item.bgColor }]}
+              >
+                <View style={styles.featureHeader}>
+                  <View style={styles.featureTag}>
+                    <Text style={styles.featureTagText}>{item.tag}</Text>
+                  </View>
+                  <Text style={styles.featureTitle}>{item.title}</Text>
                 </View>
-                <Text style={styles.featureTitle}>{item.title}</Text>
+                <Text style={styles.featureDesc} numberOfLines={2}>
+                  {item.desc}
+                </Text>
               </View>
-              <Text style={styles.featureDesc}>{item.desc}</Text>
-            </View>
-          ))}
+            ))}
+          </View>
+
+          {/* Prominent High-Contrast Get Started Button */}
+          <TouchableOpacity
+            style={styles.getStartedButton}
+            onPress={onGetStarted}
+            activeOpacity={0.88}
+            accessibilityRole="button"
+            accessibilityLabel="Get Started"
+          >
+            <Text style={styles.getStartedButtonText}>Get Started →</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.loginHint}>
+            Single Sign-On for Authorized Personnel
+          </Text>
         </View>
 
-        {/* Primary Call to Action */}
-        <TouchableOpacity
-          style={styles.getStartedButton}
-          onPress={onGetStarted}
-          activeOpacity={0.85}
-          accessibilityRole="button"
-          accessibilityLabel="Get Started"
-        >
-          <Text style={styles.getStartedButtonText}>Get Started →</Text>
-        </TouchableOpacity>
-
-        {/* Supporting Hint */}
-        <Text style={styles.loginHint}>
-          Requires an authorized organization account
-        </Text>
-      </View>
-
-      {/* Footer */}
-      <View style={styles.footer}>
+        {/* Footer */}
         <Text style={styles.footerText}>
           HB+ Platform • Version 1.0.0
         </Text>
@@ -114,119 +115,124 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 36,
     paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   scrollContentLandscape: {
-    paddingVertical: 20,
+    paddingVertical: 16,
+  },
+  mainWrapper: {
+    width: '100%',
+    maxWidth: 420,
+    alignItems: 'center',
+  },
+  mainWrapperTablet: {
+    maxWidth: 520,
   },
   card: {
+    width: '100%',
     backgroundColor: Colors.pureWhite,
-    borderRadius: 24,
-    paddingVertical: 32,
-    paddingHorizontal: 24,
+    borderRadius: 22,
+    paddingVertical: 24,
+    paddingHorizontal: 20,
     alignItems: 'center',
     elevation: 4,
     shadowColor: Colors.charcoal,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
-    shadowRadius: 12,
+    shadowRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.7)',
   },
   introBox: {
     alignItems: 'center',
-    marginBottom: 24,
-    paddingHorizontal: 8,
+    marginBottom: 16,
+    paddingHorizontal: 6,
   },
   headline: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '800',
     color: Colors.charcoal,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 4,
     letterSpacing: -0.3,
   },
   subheadline: {
-    fontSize: 14,
+    fontSize: 13,
     color: Colors.mediumGray,
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: 18,
   },
   featuresList: {
     width: '100%',
-    marginBottom: 24,
+    marginBottom: 18,
   },
   featureCard: {
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 8,
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.04)',
-    elevation: 1,
-    shadowColor: Colors.charcoal,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
   },
   featureHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 2,
   },
   featureTag: {
     backgroundColor: Colors.charcoal,
-    borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    marginRight: 10,
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    marginRight: 8,
   },
   featureTagText: {
     color: Colors.pureWhite,
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '800',
   },
   featureTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
     color: Colors.charcoal,
     flex: 1,
   },
   featureDesc: {
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.charcoal,
-    lineHeight: 18,
-    opacity: 0.85,
+    lineHeight: 16,
+    opacity: 0.8,
   },
   getStartedButton: {
     backgroundColor: Colors.warmCoral,
     width: '100%',
-    paddingVertical: 15,
+    paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3,
+    elevation: 4,
     shadowColor: Colors.warmCoral,
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.35,
     shadowRadius: 6,
   },
   getStartedButtonText: {
     color: Colors.pureWhite,
-    fontSize: 17,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '800',
     letterSpacing: 0.3,
   },
   loginHint: {
-    marginTop: 12,
-    fontSize: 12,
+    marginTop: 8,
+    fontSize: 11,
     color: Colors.mediumGray,
     textAlign: 'center',
   },
-  footer: {
-    marginTop: 18,
-    alignItems: 'center',
-  },
   footerText: {
-    fontSize: 12,
+    marginTop: 10,
+    fontSize: 11,
     color: Colors.mediumGray,
+    textAlign: 'center',
   },
 });

@@ -13,10 +13,10 @@ export const BrandLogo = ({ size = 'medium' }) => {
         </Text>
       </View>
       <Text style={[styles.tagline, isLarge && styles.taglineLarge]}>
-        Fitness & Health
+        HB+ Intern Portal
       </Text>
       <Text style={styles.subTagline}>
-        Secure Single Sign-On
+        Healthcare & Benefits Workspace
       </Text>
     </View>
   );
@@ -25,38 +25,41 @@ export const BrandLogo = ({ size = 'medium' }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 20,
   },
   badge: {
-    width: 72,
-    height: 72,
-    borderRadius: 22,
+    width: 68,
+    height: 68,
+    borderRadius: 20,
     backgroundColor: Colors.warmCoral,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 14,
-    elevation: 4,
-    shadowColor: Colors.charcoal,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
+    marginBottom: 12,
+    elevation: 6,
+    shadowColor: Colors.warmCoral,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
   },
   badgeLarge: {
-    width: 88,
-    height: 88,
-    borderRadius: 26,
+    width: 80,
+    height: 80,
+    borderRadius: 24,
   },
   brandText: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: '900',
     color: Colors.pureWhite,
     letterSpacing: -0.5,
   },
   brandTextLarge: {
-    fontSize: 38,
+    fontSize: 34,
   },
   plusSymbol: {
     color: Colors.charcoal,
+    fontWeight: '900',
   },
   tagline: {
     fontSize: 22,
@@ -65,15 +68,14 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   taglineLarge: {
-    fontSize: 26,
+    fontSize: 25,
   },
   subTagline: {
     fontSize: 13,
     color: Colors.mediumGray,
-    marginTop: 4,
-    fontWeight: '500',
+    marginTop: 3,
+    fontWeight: '600',
   },
 });
 
 export default BrandLogo;
-
