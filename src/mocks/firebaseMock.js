@@ -2,7 +2,7 @@ export const initializeApp = () => ({ name: 'mock-app' });
 export const getApps = () => [];
 export const getApp = () => ({ name: 'mock-app' });
 export const getAuth = () => ({ currentUser: null });
-export class GoogleAuthProvider {}
+export class GoogleAuthProvider { }
 export const signInWithPopup = async () => ({
   user: {
     email: 'student@hbplus.fit',
@@ -17,11 +17,9 @@ export const setDoc = async () => true;
 export const getDoc = async () => ({
   exists: () => true,
   data: () => ({
-    name: 'HB+ Official Intern',
+    name: 'HB+ id',
     email: 'student@hbplus.fit',
     domain: 'hbplus.fit',
-    role: 'Software Engineer Intern',
-    status: 'Active',
   }),
 });
 export const serverTimestamp = () => new Date().toISOString();

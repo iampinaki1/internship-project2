@@ -2,11 +2,11 @@ import { db } from '../config/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 /**
- * Firestore Service for storing and retrieving Intern user profiles
+ * Firestore Service for storing and retrieving user profiles with role-based access
  */
 export const firestoreService = {
   /**
-   * Save or update an authorized intern profile in Firestore
+   * Save or update an authorized user profile in Firestore
    * Collection: 'users'
    * Document ID: user.email (normalized lowercase)
    */
@@ -14,12 +14,15 @@ export const firestoreService = {
     if (!user?.email) return null;
 
     const emailKey = user.email.trim().toLowerCase();
+    const isAdmin = emailKey.startsWith('admin') || emailKey.startsWith('lead');
+    const role = isAdmin ? 'Admin' : 'User';
+
     const profile = {
       uid: user.uid || `hb_${Date.now()}`,
-      name: user.name || 'HB+ Intern',
+      name: user.name || (isAdmin ? 'HB+ Administrator' : 'HB+ Intern'),
       email: emailKey,
       domain: 'hbplus.fit',
-      role: 'Software Engineer Intern',
+      role, // Role-based access: 'Admin' or 'User'
       department: 'Healthcare & Benefits Engineering',
       status: 'Active',
       lastLogin: new Date().toISOString(),
@@ -39,7 +42,7 @@ export const firestoreService = {
   },
 
   /**
-   * Fetch an intern user profile from Firestore by email
+   * Fetch a user profile from Firestore by email
    */
   async getUserProfile(email) {
     if (!email) return null;
@@ -60,4 +63,3 @@ export const firestoreService = {
 };
 
 export default firestoreService;
-
