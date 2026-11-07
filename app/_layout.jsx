@@ -5,7 +5,7 @@ import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import Colors from '../src/constants/colors';
 import GetStartedScreen from './get-started';
 import LoginScreen from './index';
-import DashboardScreen from './dashboard';
+import ProfileScreen from './dashboard';
 
 const initialMetrics = Platform.OS === 'web' ? {
   frame: {
@@ -21,12 +21,12 @@ function AppNavigator() {
   const { isAuthenticated } = useAuth();
   const [currentScreen, setCurrentScreen] = useState('get-started'); // 'get-started' | 'login'
 
-  // If user is authenticated, render the dashboard
+  // If user is authenticated, render the profile
   if (isAuthenticated) {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor={Colors.softPeach} />
-        <DashboardScreen />
+        <ProfileScreen />
       </SafeAreaView>
     );
   }

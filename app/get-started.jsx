@@ -27,12 +27,6 @@ export default function GetStartedScreen({ onGetStarted }) {
         {/* HB+ Brand Logo */}
         <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
-        {/* Welcome Text */}
-        <Text style={styles.title}>Welcome to HB+</Text>
-        <Text style={styles.subtitle}>
-          Healthcare & Benefits Intern Portal
-        </Text>
-
         {/* High-Contrast Get Started Button */}
         <TouchableOpacity
           style={[
@@ -77,21 +71,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.7)',
   },
-  title: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: Colors.charcoal,
-    textAlign: 'center',
-    marginTop: 4,
-    marginBottom: 6,
-    letterSpacing: -0.3,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.mediumGray,
-    textAlign: 'center',
-    marginBottom: 28,
-  },
   getStartedButton: {
     backgroundColor: Colors.warmCoral,
     width: '100%',
@@ -99,6 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 12,
     elevation: 4,
     shadowColor: Colors.warmCoral,
     shadowOffset: { width: 0, height: 3 },
