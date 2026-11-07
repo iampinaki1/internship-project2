@@ -1,18 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, StatusBar } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import Colors from '../src/constants/colors';
-import IndexScreen from './index';
+import GetStartedScreen from './get-started';
+import LoginScreen from './index';
 import DashboardScreen from './dashboard';
 
 function AppNavigator() {
   const { isAuthenticated } = useAuth();
+  const [currentScreen, setCurrentScreen] = useState('get-started'); // 'get-started' | 'login'
+
+  // If user is authenticated, render the dashboard
+  if (isAuthenticated) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor={Colors.softPeach} />
+        <DashboardScreen />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.softPeach} />
-      {isAuthenticated ? <DashboardScreen /> : <IndexScreen />}
+      {currentScreen === 'get-started' ? (
+        <GetStartedScreen onGetStarted={() => setCurrentScreen('login')} />
+      ) : (
+        <LoginScreen onBack={() => setCurrentScreen('get-started')} />
+      )}
     </SafeAreaView>
   );
 }

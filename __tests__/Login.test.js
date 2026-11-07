@@ -4,13 +4,24 @@ import BrandLogo from '../src/components/BrandLogo';
 import GoogleLoginButton from '../src/components/GoogleLoginButton';
 import ErrorMessage from '../src/components/ErrorMessage';
 import LoginScreen from '../app/index';
+import GetStartedScreen from '../app/get-started';
 import { AuthProvider } from '../src/context/AuthContext';
 
-describe('Milestone 4: Login UI Component Suite', () => {
+describe('UI Component Suite', () => {
   test('BrandLogo renders HB+ branding mark', async () => {
     let tree;
     await ReactTestRenderer.act(() => {
       tree = ReactTestRenderer.create(<BrandLogo />).toJSON();
+    });
+    expect(tree).toBeDefined();
+  });
+
+  test('GetStartedScreen renders intro and CTA', async () => {
+    let tree;
+    await ReactTestRenderer.act(() => {
+      tree = ReactTestRenderer.create(
+        <GetStartedScreen onGetStarted={() => {}} />
+      ).toJSON();
     });
     expect(tree).toBeDefined();
   });
@@ -53,7 +64,7 @@ describe('Milestone 4: Login UI Component Suite', () => {
     await ReactTestRenderer.act(() => {
       ReactTestRenderer.create(
         <AuthProvider>
-          <LoginScreen />
+          <LoginScreen onBack={() => {}} />
         </AuthProvider>
       );
     });

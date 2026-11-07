@@ -15,7 +15,7 @@ import GoogleLoginButton from '../src/components/GoogleLoginButton';
 import ErrorMessage from '../src/components/ErrorMessage';
 import { useAuth } from '../src/context/AuthContext';
 
-export default function LoginScreen() {
+export default function LoginScreen({ onBack }) {
   const { width, height } = useWindowDimensions();
   const { login } = useAuth?.() || {};
 
@@ -68,6 +68,17 @@ export default function LoginScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.card, { width: cardWidth }]}>
+          {/* Back button if available */}
+          {onBack && (
+            <TouchableOpacity
+              onPress={onBack}
+              style={styles.backButton}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Text style={styles.backButtonText}>← Back</Text>
+            </TouchableOpacity>
+          )}
+
           {/* HB+ Branding */}
           <BrandLogo size={isTablet ? 'large' : 'medium'} />
 
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.pureWhite,
     borderRadius: 24,
-    paddingVertical: 36,
+    paddingVertical: 32,
     paddingHorizontal: 28,
     alignItems: 'center',
     elevation: 4,
@@ -142,6 +153,18 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.6)',
+    position: 'relative',
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
+  },
+  backButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: Colors.charcoal,
   },
   actionContainer: {
     width: '100%',

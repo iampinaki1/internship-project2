@@ -13,7 +13,7 @@ export const BrandLogo = ({ size = 'medium' }) => {
         </Text>
       </View>
       <Text style={[styles.tagline, isLarge && styles.taglineLarge]}>
-        Intern Portal
+        Fitness & Health
       </Text>
       <Text style={styles.subTagline}>
         Secure Single Sign-On
@@ -76,3 +76,4 @@ const styles = StyleSheet.create({
 });
 
 export default BrandLogo;
+
