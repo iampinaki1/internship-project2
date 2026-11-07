@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "web": "vite"
+    "web": "vite --force"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.88.1",
