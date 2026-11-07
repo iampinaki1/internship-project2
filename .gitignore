@@ -71,6 +71,11 @@ yarn-error.log
 .env*.local
 .env.production
 
+# Web build
+dist/
+.vite/
+
+
 
 # Yarn
 .yarn/*
