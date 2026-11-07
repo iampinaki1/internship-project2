@@ -11,10 +11,18 @@ import {
 import Colors from '../src/constants/colors';
 import BrandLogo from '../src/components/BrandLogo';
 
-export default function GetStartedScreen({ onGetStarted }) {
+export default function GetStartedScreen({ navigation, onGetStarted }) {
   const { width, height } = useWindowDimensions();
   const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
   const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
+
+  const handlePress = () => {
+    if (onGetStarted) {
+      onGetStarted();
+    } else if (navigation?.navigate) {
+      navigation.navigate('Login');
+    }
+  };
 
   return (
     <ScrollView
@@ -33,7 +41,7 @@ export default function GetStartedScreen({ onGetStarted }) {
             styles.getStartedButton,
             Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
           ]}
-          onPress={onGetStarted}
+          onPress={handlePress}
           activeOpacity={0.88}
           accessibilityRole="button"
           accessibilityLabel="Get Started"

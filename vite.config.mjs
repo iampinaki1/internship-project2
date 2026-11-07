@@ -24,6 +24,7 @@ export default defineConfig({
   define: {
     global: 'window',
     __DEV__: JSON.stringify(true),
+    'process.env': {},
   },
   resolve: {
     alias: [

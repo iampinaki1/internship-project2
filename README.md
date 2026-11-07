@@ -108,3 +108,25 @@ npm run web
 ```
 Browser me `http://localhost:5173` par app open ho jayegi.
 
+---
+
+## 🔐 Authentication, Domain Validation & Firestore Integration
+
+### 1. Domain Validation Flow
+- **Allowed Official Domain**: `@hbplus.fit`
+  - Example: `example@hbplus.fit` → Login allowed, user profile synced to Firestore, access granted to Protected Dashboard.
+- **Restricted Domains**: `@gmail.com` or any non-official domain
+  - Example: `example@gmail.com` → Access blocked, exact error displayed:
+    > *"Access restricted. Please login using your official domain email."*
+
+### 2. React Navigation & Protected Routes
+- Built using `@react-navigation/native` & `@react-navigation/native-stack`.
+- **Public Routes**: `GetStarted` → `Login`
+- **Protected Routes**: `Dashboard` (Only mounted and accessible when `isAuthenticated === true`).
+- On **Sign Out**, session is immediately revoked and navigation switches back to public auth flow.
+
+### 3. Firebase & Firestore Integration
+- **Firebase Config**: Modular SDK v11 initialized at `src/config/firebase.js`.
+- **Firestore Service**: User documents synced to Firestore collection `users` with document ID matching lowercase email.
+- **Cross-Platform Compatibility**: Tested and verified on both **Android** (React Native CLI) and **Web** (Vite + React Native Web).
+

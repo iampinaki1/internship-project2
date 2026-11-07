@@ -12,14 +12,16 @@ import { useAuth } from '../src/context/AuthContext';
 import Colors from '../src/constants/colors';
 import BrandLogo from '../src/components/BrandLogo';
 
-export default function ProfileScreen() {
+export default function DashboardScreen() {
   const { user, logout } = useAuth?.() || {};
   const { width, height } = useWindowDimensions();
   const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
   const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
 
   const displayName = user?.name || 'HB+ Intern';
-  const displayEmail = user?.email || 'intern@hbplus.com';
+  const displayEmail = user?.email || 'example@hbplus.fit';
+  const displayDomain = user?.domain || 'hbplus.fit';
+  const storageStatus = user?.storageType || 'Firestore (Cloud)';
 
   return (
     <ScrollView
@@ -32,9 +34,14 @@ export default function ProfileScreen() {
         {/* HB+ Brand Logo */}
         <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
+        {/* Protected Dashboard Header */}
+        <View style={styles.protectedHeaderBadge}>
+          <Text style={styles.protectedHeaderText}>🔒 Protected Route • Authorized</Text>
+        </View>
+
         {/* Profile Card Box */}
         <View style={styles.profileBox}>
-          <Text style={styles.sectionTitle}>Profile</Text>
+          <Text style={styles.sectionTitle}>Intern Profile</Text>
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Name</Text>
@@ -42,13 +49,35 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Email</Text>
+            <Text style={styles.detailLabel}>Official Email</Text>
             <Text style={styles.detailValue}>{displayEmail}</Text>
           </View>
 
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Domain</Text>
+            <View style={styles.domainBadge}>
+              <Text style={styles.domainBadgeText}>@{displayDomain}</Text>
+            </View>
+          </View>
 
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Role</Text>
+            <Text style={styles.detailValue}>Software Engineer Intern</Text>
+          </View>
 
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Account Status</Text>
+            <View style={styles.statusBadge}>
+              <Text style={styles.statusBadgeText}>Active</Text>
+            </View>
+          </View>
 
+          <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
+            <Text style={styles.detailLabel}>Database</Text>
+            <View style={styles.firestoreBadge}>
+              <Text style={styles.firestoreBadgeText}>✓ {storageStatus}</Text>
+            </View>
+          </View>
         </View>
 
         {/* High-Contrast Sign Out Button */}
@@ -95,6 +124,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.7)',
   },
+  protectedHeaderBadge: {
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#C8E6C9',
+  },
+  protectedHeaderText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#2E7D32',
+  },
   profileBox: {
     width: '100%',
     backgroundColor: Colors.offWhite,
@@ -128,6 +171,39 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.charcoal,
     fontWeight: '700',
+  },
+  domainBadge: {
+    backgroundColor: Colors.pastelLavender,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  domainBadgeText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: Colors.charcoal,
+  },
+  statusBadge: {
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  statusBadgeText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#2E7D32',
+  },
+  firestoreBadge: {
+    backgroundColor: '#FFF3E0',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  firestoreBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#E65100',
   },
   logoutButton: {
     backgroundColor: Colors.warmCoral,

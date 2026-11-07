@@ -13,37 +13,52 @@ import Colors from '../src/constants/colors';
 import BrandLogo from '../src/components/BrandLogo';
 import GoogleLoginButton from '../src/components/GoogleLoginButton';
 import ErrorMessage from '../src/components/ErrorMessage';
+import GoogleOAuthModal from '../src/components/GoogleOAuthModal';
 import { useAuth } from '../src/context/AuthContext';
 
-export default function LoginScreen({ onBack }) {
+export default function LoginScreen({ navigation, onBack }) {
   const { width, height } = useWindowDimensions();
-  const { login } = useAuth?.() || {};
+  const { loginWithGoogle, authError, clearAuthError } = useAuth?.() || {};
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showOAuthModal, setShowOAuthModal] = useState(false);
 
   const isTabletOrDesktop = Math.min(width, height) >= 600 || width >= 768;
   const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
 
-  const handleGoogleLogin = async () => {
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else if (navigation?.canGoBack?.()) {
+      navigation.goBack();
+    }
+  };
+
+  const handleOpenGoogleSignIn = () => {
+    setErrorMessage('');
+    clearAuthError?.();
+    setShowOAuthModal(true);
+  };
+
+  const handleSelectAccount = async (email, name) => {
     setLoading(true);
     setErrorMessage('');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      login?.({
-        email: 'intern@hbplus.com',
-        name: 'HB+ Intern',
-        domain: 'hbplus.com',
-      });
+      await loginWithGoogle?.(email, name);
+      setShowOAuthModal(false);
     } catch (err) {
+      setShowOAuthModal(false);
       setErrorMessage(
-        err?.message || 'Unable to sign in. Please try again.'
+        err?.message || 'Access restricted. Please login using your official domain email.'
       );
     } finally {
       setLoading(false);
     }
   };
+
+  const displayError = errorMessage || authError;
 
   return (
     <KeyboardAvoidingView
@@ -57,38 +72,50 @@ export default function LoginScreen({ onBack }) {
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.card, { width: cardWidth }]}>
-          {onBack && (
-            <TouchableOpacity
-              onPress={onBack}
-              style={[
-                styles.backButton,
-                Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
-              ]}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Text style={styles.backButtonText}>← Back</Text>
-            </TouchableOpacity>
-          )}
+          {/* Back Button */}
+          <TouchableOpacity
+            onPress={handleBack}
+            style={[
+              styles.backButton,
+              Platform.OS === 'web' && { cursor: 'pointer', userSelect: 'none' },
+            ]}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            accessibilityRole="button"
+            accessibilityLabel="Go Back"
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
 
           {/* HB+ Branding */}
           <BrandLogo size={isTabletOrDesktop ? 'large' : 'medium'} />
 
           {/* Error Message Area */}
           <ErrorMessage
-            message={errorMessage}
-            onDismiss={() => setErrorMessage('')}
+            message={displayError}
+            onDismiss={() => {
+              setErrorMessage('');
+              clearAuthError?.();
+            }}
           />
 
           {/* Google Sign In Button */}
           <View style={styles.actionContainer}>
             <GoogleLoginButton
-              onPress={handleGoogleLogin}
+              onPress={handleOpenGoogleSignIn}
               loading={loading}
               title="Sign in with Google"
             />
           </View>
         </View>
       </ScrollView>
+
+      {/* Google OAuth Account Picker Modal */}
+      <GoogleOAuthModal
+        visible={showOAuthModal}
+        onClose={() => setShowOAuthModal(false)}
+        onSelectAccount={handleSelectAccount}
+        loading={loading}
+      />
     </KeyboardAvoidingView>
   );
 }
