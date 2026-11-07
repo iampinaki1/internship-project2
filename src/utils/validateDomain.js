@@ -11,3 +11,4 @@ export const validateDomain = (email) => {
 };
 
 export default validateDomain;
+

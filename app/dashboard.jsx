@@ -19,7 +19,7 @@ export default function DashboardScreen() {
   const cardWidth = Math.min(width * 0.92, isTabletOrDesktop ? 440 : 380);
 
   const displayName = user?.name || 'HB+ Intern';
-  const displayEmail = user?.email || 'example@hbplus.fit';
+  const displayEmail = user?.email || '';
 
   return (
     <ScrollView

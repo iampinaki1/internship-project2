@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
-  Platform,
 } from 'react-native';
 import Colors from '../constants/colors';
 
@@ -17,16 +16,11 @@ export default function GoogleOAuthModal({
   onSelectAccount,
   loading = false,
 }) {
-  const [customEmail, setCustomEmail] = useState('');
-  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [email, setEmail] = useState('');
 
-  const handleSelect = (email, name) => {
-    onSelectAccount(email, name);
-  };
-
-  const handleCustomSubmit = () => {
-    if (customEmail.trim()) {
-      onSelectAccount(customEmail.trim(), 'HB+ Intern');
+  const handleSubmit = () => {
+    if (email.trim()) {
+      onSelectAccount(email.trim());
     }
   };
 
@@ -44,8 +38,8 @@ export default function GoogleOAuthModal({
             <View style={styles.googleIconBadge}>
               <Text style={styles.googleLetter}>G</Text>
             </View>
-            <Text style={styles.title}>Sign in with Google</Text>
-            <Text style={styles.subtitle}>Choose an account to continue to HB+</Text>
+            <Text style={styles.title}>Google Sign-In</Text>
+            <Text style={styles.subtitle}>Enter your official Google email address</Text>
           </View>
 
           {loading ? (
@@ -55,70 +49,28 @@ export default function GoogleOAuthModal({
             </View>
           ) : (
             <View style={styles.content}>
-              {/* Account 1: example@hbplus.fit */}
-              <TouchableOpacity
-                style={styles.accountOption}
-                onPress={() => handleSelect('example@hbplus.fit', 'HB+ Intern')}
-                activeOpacity={0.7}
-                accessibilityRole="button"
-                accessibilityLabel="Sign in with example@hbplus.fit"
-              >
-                <View style={[styles.avatar, { backgroundColor: Colors.warmCoral }]}>
-                  <Text style={styles.avatarText}>HB</Text>
-                </View>
-                <View style={styles.accountInfo}>
-                  <Text style={styles.accountName}>HB+ Intern</Text>
-                  <Text style={styles.accountEmail}>example@hbplus.fit</Text>
-                </View>
-              </TouchableOpacity>
+              <TextInput
+                style={styles.input}
+                placeholder="name@hbplus.fit"
+                placeholderTextColor={Colors.mediumGray}
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoFocus
+              />
 
-              {/* Account 2: example@gmail.com */}
               <TouchableOpacity
-                style={styles.accountOption}
-                onPress={() => handleSelect('example@gmail.com', 'Personal Account')}
-                activeOpacity={0.7}
+                style={[styles.submitButton, !email.trim() && styles.submitButtonDisabled]}
+                onPress={handleSubmit}
+                disabled={!email.trim()}
+                activeOpacity={0.8}
                 accessibilityRole="button"
-                accessibilityLabel="Sign in with example@gmail.com"
+                accessibilityLabel="Sign in with Google"
               >
-                <View style={[styles.avatar, { backgroundColor: '#EA4335' }]}>
-                  <Text style={styles.avatarText}>G</Text>
-                </View>
-                <View style={styles.accountInfo}>
-                  <Text style={styles.accountName}>Personal Account</Text>
-                  <Text style={styles.accountEmail}>example@gmail.com</Text>
-                </View>
+                <Text style={styles.submitButtonText}>Continue with Google</Text>
               </TouchableOpacity>
-
-              {/* Option 3: Custom Email Input */}
-              {showCustomInput ? (
-                <View style={styles.customInputContainer}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Enter email address"
-                    placeholderTextColor={Colors.mediumGray}
-                    value={customEmail}
-                    onChangeText={setCustomEmail}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    autoCorrect={false}
-                  />
-                  <TouchableOpacity
-                    style={styles.submitButton}
-                    onPress={handleCustomSubmit}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={styles.submitButtonText}>Continue</Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <TouchableOpacity
-                  style={styles.useAnotherButton}
-                  onPress={() => setShowCustomInput(true)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.useAnotherText}>+ Use another account</Text>
-                </TouchableOpacity>
-              )}
             </View>
           )}
 
@@ -150,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.pureWhite,
     borderRadius: 20,
     width: '100%',
-    maxWidth: 420,
+    maxWidth: 400,
     padding: 24,
     elevation: 8,
     shadowColor: Colors.charcoal,
@@ -194,78 +146,32 @@ const styles = StyleSheet.create({
   },
   content: {
     width: '100%',
-    gap: 12,
     marginBottom: 16,
-  },
-  accountOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: Colors.offWhite,
-    borderWidth: 1.5,
-    borderColor: '#ECECEC',
-    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
-  },
-  avatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  avatarText: {
-    color: '#FFFFFF',
-    fontWeight: '800',
-    fontSize: 14,
-  },
-  accountInfo: {
-    flex: 1,
-  },
-  accountName: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: Colors.charcoal,
-  },
-  accountEmail: {
-    fontSize: 13,
-    color: Colors.mediumGray,
-    marginTop: 1,
-  },
-  customInputContainer: {
-    marginTop: 6,
   },
   input: {
     backgroundColor: Colors.pureWhite,
     borderWidth: 1.5,
     borderColor: '#E2E8F0',
     borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 15,
     color: Colors.charcoal,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   submitButton: {
     backgroundColor: Colors.warmCoral,
     borderRadius: 10,
-    paddingVertical: 10,
+    paddingVertical: 12,
     alignItems: 'center',
+  },
+  submitButtonDisabled: {
+    opacity: 0.6,
   },
   submitButtonText: {
     color: Colors.pureWhite,
     fontWeight: '700',
-    fontSize: 14,
-  },
-  useAnotherButton: {
-    paddingVertical: 8,
-    alignItems: 'center',
-  },
-  useAnotherText: {
-    color: Colors.warmCoral,
-    fontWeight: '700',
-    fontSize: 13,
+    fontSize: 15,
   },
   loadingContainer: {
     paddingVertical: 32,

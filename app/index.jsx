@@ -35,18 +35,32 @@ export default function LoginScreen({ navigation, onBack }) {
     }
   };
 
-  const handleOpenGoogleSignIn = () => {
+  const handleOpenGoogleSignIn = async () => {
     setErrorMessage('');
     clearAuthError?.();
-    setShowOAuthModal(true);
+
+    if (Platform.OS === 'web') {
+      setLoading(true);
+      try {
+        await loginWithGoogle?.();
+      } catch (err) {
+        setErrorMessage(
+          err?.message || 'Access restricted. Please login using your official domain email.'
+        );
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setShowOAuthModal(true);
+    }
   };
 
-  const handleSelectAccount = async (email, name) => {
+  const handleSelectAccount = async (email) => {
     setLoading(true);
     setErrorMessage('');
 
     try {
-      await loginWithGoogle?.(email, name);
+      await loginWithGoogle?.(email);
       setShowOAuthModal(false);
     } catch (err) {
       setShowOAuthModal(false);
@@ -109,7 +123,7 @@ export default function LoginScreen({ navigation, onBack }) {
         </View>
       </ScrollView>
 
-      {/* Google OAuth Account Picker Modal */}
+      {/* Google OAuth Modal for Mobile */}
       <GoogleOAuthModal
         visible={showOAuthModal}
         onClose={() => setShowOAuthModal(false)}

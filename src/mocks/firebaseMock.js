@@ -3,6 +3,14 @@ export const getApps = () => [];
 export const getApp = () => ({ name: 'mock-app' });
 export const getAuth = () => ({ currentUser: null });
 export class GoogleAuthProvider {}
+export const signInWithPopup = async () => ({
+  user: {
+    email: 'student@hbplus.fit',
+    displayName: 'HB+ Official Intern',
+    uid: 'mock_uid_123',
+  },
+});
+export const signOut = async () => true;
 export const getFirestore = () => ({ name: 'mock-db' });
 export const doc = (_db, collectionName, id) => ({ path: `${collectionName}/${id}` });
 export const setDoc = async () => true;
@@ -10,7 +18,7 @@ export const getDoc = async () => ({
   exists: () => true,
   data: () => ({
     name: 'HB+ Official Intern',
-    email: 'example@hbplus.fit',
+    email: 'student@hbplus.fit',
     domain: 'hbplus.fit',
     role: 'Software Engineer Intern',
     status: 'Active',
@@ -24,10 +32,11 @@ export default {
   getApp,
   getAuth,
   GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
   getFirestore,
   doc,
   setDoc,
   getDoc,
   serverTimestamp,
 };
-
